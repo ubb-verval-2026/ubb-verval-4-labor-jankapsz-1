@@ -124,6 +124,36 @@ public class PersonPageTests
         var salaryAfterSubmission = double.Parse(salaryLabel.Text);
         salaryAfterSubmission.Should().BeApproximately(expectedSalary, 0.001);
     }
+
+    [TestCase("-10.001")]
+    [TestCase("-15")]
+    [TestCase("-20")]
+    public void Person_SalaryIncrease_LessThanMinus10_ShouldShowErrorMessages(string invalidPercentage)
+    {
+        // Arrange
+        driver.Navigate().GoToUrl(BaseURL);
+        driver.FindElement(By.XPath("//*[@data-test='PersonPageNavigation']")).Click();
+
+        System.Threading.Thread.Sleep(1000);
+
+        var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
+
+        var input = wait.Until(ExpectedConditions.ElementToBeClickable(By.Name("formModel.SalaryIncreasePercentage")));
+        input.Clear();
+        input.SendKeys(invalidPercentage);
+
+        // Act
+        var submitButton = wait.Until(ExpectedConditions.ElementToBeClickable(By.XPath("//*[@data-test='SalaryIncreaseSubmitButton']")));
+        submitButton.Click();
+
+        // Assert
+        bool isTopErrorVisible = IsElementPresent(By.XPath("(.//*[normalize-space(text()) and normalize-space(.)='About'])[1]/following::li[1]"));
+        bool isFieldErrorVisible = IsElementPresent(By.XPath("(.//*[normalize-space(text()) and normalize-space(.)='*'])[2]/following::div[2]"));
+
+        isTopErrorVisible.Should().BeTrue();
+        isFieldErrorVisible.Should().BeTrue();
+    }
+
     private bool IsElementPresent(By by)
     {
         try
