@@ -107,7 +107,7 @@ public class PersonPageTests
         driver.Navigate().GoToUrl(BaseURL);
         driver.FindElement(By.XPath("//*[@data-test='PersonPageNavigation']")).Click();
 
-        System.Threading.Thread.Sleep(1000);
+        Thread.Sleep(1000);
 
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
 
@@ -125,6 +125,7 @@ public class PersonPageTests
         salaryAfterSubmission.Should().BeApproximately(expectedSalary, 0.001);
     }
 
+    [TestCase("-10")]
     [TestCase("-10.001")]
     [TestCase("-15")]
     [TestCase("-20")]
@@ -134,7 +135,7 @@ public class PersonPageTests
         driver.Navigate().GoToUrl(BaseURL);
         driver.FindElement(By.XPath("//*[@data-test='PersonPageNavigation']")).Click();
 
-        System.Threading.Thread.Sleep(1000);
+        Thread.Sleep(1000);
 
         var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(5));
 
